@@ -45,33 +45,37 @@ def newCatalog():
     catalog = {'videos': None,
                'video_id': None,
                'category_id': None,
-               'likes': 0}
+               'videos_id': 0}
 
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
-    catalog['category_id'] = mp.newMap(34500,
-                                       maptype='CHAINING',
-                                       loadfactor=4.0)
+    catalog["category"] = mp.newMap(34500,
+                                    maptype='PROBING',
+                                    loadfactor=0.5,
+                                    comparefunction=compareCategories)
 
-    catalog['likes'] = mp.newMap(34500,
-                                 maptype='CHAINING',
-                                 loadfactor=4.0,
-                                 comparefunction=cmpVideosByLikes)
+    catalog['category_id'] = mp.newMap(37,
+                                       maptype='CHAINING',
+                                       loadfactor=4.0,
+                                       comparefunction=compareCategoryId)
+
+    catalog['videos_id'] = mp.newMap(34500,
+                                     maptype='CHAINING',
+                                     loadfactor=4.0,
+                                     comparefunction=compareVideosId)
 
     return catalog
 
 
-def newCategory():
+def newCategory(name, id):
     category = {'id': None,
-                'category': None}
+                'category': "",
+                'total_videos': 0,
+                'videos': None}
 
-    category['id'] = mp.newMap(10000,
-                               maptype='CHAINING',
-                               loadfactor=4.0)
-
-    category['category'] = mp.newMap(10000,
-                                     maptype='CHAINING',
-                                     loadfactor=4.0)
+    category['id'] = id
+    category['category'] = name
+    category['videos'] = lt.newList
     return category
 
 
@@ -82,24 +86,36 @@ def newCategory():
 
 
 def addVideo(catalog, video):
-
     lt.addLast(catalog['videos'], video)
-    mp.put(catalog['title'], video['title'], video)
 
 
-def addTag(catalog, tag):
+def addCategory(catalog, category):
     """
-    Adiciona un tag a la tabla de tags dentro del catalogo y se
-    actualiza el indice de identificadores del tag.
+    Adiciona un tag a la tabla de categoria dentro del catalogo y se
+    actualiza el indice de identificadores de la categoria.
     """
-    newtag = catalog(tag['tag_name'], tag['tag_id'])
-    mp.put(catalog['tags'], tag['tag_name'], newtag)
-    mp.put(catalog['tagIds'], tag['tag_id'], newtag)
+    newcategory = newCategory(category['category'], category['id'])
+    mp.put(catalog['category'], category['category'], newcategory)
+    mp.put(catalog['category_id'], category['id'], newcategory)
 
+
+def addVideoCategory(catalog, category):
+    catid = category['i']
+    pair = mp.get(catalog['category_id'], catid)
+
+    i = 0
+    while i < lt.size(catalog['videos']):
+        vidid = lt.getElement(catalog['videos'], i)
+        vidcat = vidid['category_id']
+        catvid = mp.get(catalog["category"], me.getValue(pair)['category'])
+        if catid == vidcat:
+            lt.addLast(catvid['values']['videos'], vidid)
+        i += 1
 
 # ==============================
 # Funciones de consulta
 # ==============================
+
 
 def videosSize(catalog):
     """
@@ -107,26 +123,44 @@ def videosSize(catalog):
     """
     return lt.size(catalog['videos'])
 
+
+def getVideosByCat(catalog, category):
+    cat = mp.get(catalog['category'], category)
+    videos = None
+    if category:
+        videos = me.getValue(cat)['videos']
+    return videos
+
 # ==============================
 # Funciones de Comparacion
 # ==============================
 
 
-def compareTagNames(name, tag):
-    tagentry = me.getKey(tag)
-    if (name == tagentry):
+def compareVideosId(id, entry):
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
         return 0
-    elif (name > tagentry):
+    elif (int(id) > int(identry)):
+        return 1
+    else:
+        return 0
+
+
+def compareCategories(name, category):
+    catentry = me.getKey(category)
+    if (name == catentry):
+        return 0
+    elif (name > catentry):
         return 1
     else:
         return -1
 
 
-def compareTagIds(id, tag):
-    tagentry = me.getKey(tag)
-    if (int(id) == int(tagentry)):
+def compareCategoryId(id, catid):
+    identry = me.getKey(catid)
+    if (int(id) == int(identry)):
         return 0
-    elif (int(id) > int(tagentry)):
+    elif (int(id) > int(identry)):
         return 1
     else:
         return 0
@@ -136,3 +170,9 @@ def cmpVideosByLikes(video1, video2):
     return (float(video1['likes']) > float(video2['likes']))
 
 # Funciones de ordenamiento
+
+
+def sortVideos(catalog, size):
+    sublist = lt.subList(catalog, 0, size)
+    newlist = sa.sort(sublist, cmpVideosByLikes)
+    return newlist

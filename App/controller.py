@@ -49,7 +49,6 @@ def loadData(catalog):
     estructura de datos
     """
     loadVideos(catalog)
-    # loadTags(catalog)
 
 
 def loadVideos(catalog):
@@ -57,21 +56,10 @@ def loadVideos(catalog):
     Carga los libros del archivo.  Por cada libro se indica al
     modelo que debe adicionarlo al catalogo.
     """
-    booksfile = cf.data_dir + 'video-samples/videos-small.csv'
+    booksfile = cf.data_dir + 'videos-10pct.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
-
-
-def loadTags(catalog):
-    """
-    Carga todos los tags del archivo e indica al modelo
-    que los adicione al catalogo
-    """
-    tagsfile = cf.data_dir + 'GoodReads/tags.csv'
-    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
-    for tag in input_file:
-        model.addTag(catalog, tag)
 
 
 # Funciones de consulta sobre el catálogo
@@ -90,3 +78,11 @@ def videosSize(catalog):
     Numero de libros cargados al catalogo
     """
     return model.videosSize(catalog)
+
+
+def sortVideos(catalog, size):
+    return model.sortVideos(catalog, size)
+
+
+def getVideosByCat(catalog, category):
+    return model.getVideosByCat(catalog, category)

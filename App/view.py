@@ -34,76 +34,12 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
-
-def printAuthorData(author):
-    """
-    Imprime la información del autor seleccionado
-    """
-    if author:
-        print('Autor encontrado: ' + author['name'])
-        print('Promedio: ' + str(author['average_rating']))
-        print('Total de libros: ' + str(lt.size(author['books'])))
-        for book in lt.iterator(author['books']):
-            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
-        print("\n")
-    else:
-        print('No se encontro el autor.\n')
-
-
-def printBooksbyTag(books):
-    """
-    Imprime los libros que han sido clasificados con
-    una etiqueta
-    """
-    if (books):
-        print('Se encontraron: ' + str(lt.size(books)) + ' Libros.')
-        for book in lt.iterator(books):
-            print(book['title'])
-        print("\n")
-    else:
-        print("No se econtraron libros.\n")
-
-
-def printBooksbyYear(books):
-    """
-    Imprime los libros que han sido publicados en un
-    año
-    """
-    if(books):
-        print('Se encontraron: ' + str(lt.size(books)) + ' Libros')
-        for book in lt.iterator(books):
-            print(book['title'])
-        print("\n")
-    else:
-        print("No se encontraron libros.\n")
-
-
-def printBestBooks(books):
-    """
-    Imprime la información de los mejores libros
-    por promedio
-    """
-    size = lt.size(books)
-    if size:
-        print(' Estos son los mejores libros: ')
-        for book in lt.iterator(books):
-            print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'])
-        print("\n")
-    else:
-        print('No se encontraron libros.\n')
-
-
 # Menu de opciones
 
 def printMenu():
     print("Bienvenido")
     print("1- Inicializar Catálogo")
-    print("2- Cargar información en el catálogo")
-    print("3- Consultar los libros de un año")
-    print("4- Consultar los libros de un autor")
-    print("5- Consultar los Libros por etiqueta")
-    print("0- Salir")
+    print("2- Cargar los n videos con mas likes en una categoria")
 
 
 # Funciones de inicializacion
@@ -122,6 +58,11 @@ def loadData(catalog):
     controller.loadData(catalog)
 
 
+def printreq1(catlogo, size):
+    for video in lt.iterator(catalog):
+        print('Titulo: ' + video['video'] + 'Likes: ' + video['likes'])
+
+
 # Menu principal
 
 while True:
@@ -131,11 +72,21 @@ while True:
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
         cont = controller.initCatalog()
-
-    elif int(inputs[0]) == 2:
-        print("Cargando información de los archivos ....")
         controller.loadData(cont)
         print('Videos cargados: ' + str(controller.videosSize(cont)))
+    elif int(inputs[0]) == 2:
+        category = input("Ingrese la categoria que desea consultar:\n")
+        size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
+        if size < 1:
+            print("El numero ingresado es mucho menor a lo esperado, trate con uno mayor")
+            break
+        elif size > controller.videosSize(cont):
+            print("El numero es demasiado grande trate con uno menor")
+            break
+        result = controller.getVideosByCat(cont, category)
+        newlist = controller.sortVideos(result, size)
+        print("Cargando información de los archivos ....")
+        printreq1(newlist, size)
 
     else:
         sys.exit(0)
