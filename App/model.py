@@ -43,64 +43,21 @@ los mismos.
 def newCatalog():
 
     catalog = {'videos': None,
-               'trending_date': None,
-               'title': None,
-               'channel_title': None,
+               'video_id': None,
                'category_id': None,
-               'publish_time': None,
-               'tags': None,
-               'views': None,
-               'likes': 0,
-               'dislikes': 0,
-               'country': None,
-               'days': 0}
+               'likes': 0}
 
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
-    catalog['trending_date'] = mp.newMap(10000,
-                                         maptype='CHAINING',
-                                         loadfactor=4.0)
-
-    catalog['title'] = mp.newMap(10000,
-                                 maptype='CHAINING',
-                                 loadfactor=4.0)
-
-    catalog['channel_title'] = mp.newMap(10000,
-                                         maptype='CHAINING',
-                                         loadfactor=4.0)
-
-    catalog['category_id'] = mp.newMap(10000,
+    catalog['category_id'] = mp.newMap(34500,
                                        maptype='CHAINING',
                                        loadfactor=4.0)
 
-    catalog['publish_time'] = mp.newMap(10000,
-                                        maptype='CHAINING',
-                                        loadfactor=4.0)
-
-    catalog['tags'] = mp.newMap(10000,
-                                maptype='CHAINING',
-                                loadfactor=4.0)
-
-    catalog['views'] = mp.newMap(10000,
-                                 maptype='CHAINING',
-                                 loadfactor=4.0)
-
-    catalog['likes'] = mp.newMap(10000,
+    catalog['likes'] = mp.newMap(34500,
                                  maptype='CHAINING',
                                  loadfactor=4.0,
                                  comparefunction=cmpVideosByLikes)
 
-    catalog['dislikes'] = mp.newMap(10000,
-                                    maptype='CHAINING',
-                                    loadfactor=4.0)
-
-    catalog['country'] = mp.newMap(10000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0)
-
-    catalog['days'] = mp.newMap(10000,
-                                maptype='CHAINING',
-                                loadfactor=4.0)
     return catalog
 
 
