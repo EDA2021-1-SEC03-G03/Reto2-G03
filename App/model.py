@@ -39,12 +39,138 @@ los mismos.
 
 # Construccion de modelos
 
-# Funciones para agregar informacion al catalogo
+
+def newCatalog():
+
+    catalog = {'videos': None,
+               'trending_date': None,
+               'title': None,
+               'channel_title': None,
+               'category_id': None,
+               'publish_time': None,
+               'tags': None,
+               'views': None,
+               'likes': 0,
+               'dislikes': 0,
+               'country': None,
+               'days': 0}
+
+    catalog['videos'] = lt.newList('ARRAY_LIST')
+
+    catalog['trending_date'] = mp.newMap(10000,
+                                         maptype='CHAINING',
+                                         loadfactor=4.0)
+
+    catalog['title'] = mp.newMap(10000,
+                                 maptype='CHAINING',
+                                 loadfactor=4.0)
+
+    catalog['channel_title'] = mp.newMap(10000,
+                                         maptype='CHAINING',
+                                         loadfactor=4.0)
+
+    catalog['category_id'] = mp.newMap(10000,
+                                       maptype='CHAINING',
+                                       loadfactor=4.0)
+
+    catalog['publish_time'] = mp.newMap(10000,
+                                        maptype='CHAINING',
+                                        loadfactor=4.0)
+
+    catalog['tags'] = mp.newMap(10000,
+                                maptype='CHAINING',
+                                loadfactor=4.0)
+
+    catalog['views'] = mp.newMap(10000,
+                                 maptype='CHAINING',
+                                 loadfactor=4.0)
+
+    catalog['likes'] = mp.newMap(10000,
+                                 maptype='CHAINING',
+                                 loadfactor=4.0,
+                                 comparefunction=cmpVideosByLikes)
+
+    catalog['dislikes'] = mp.newMap(10000,
+                                    maptype='CHAINING',
+                                    loadfactor=4.0)
+
+    catalog['country'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0)
+
+    catalog['days'] = mp.newMap(10000,
+                                maptype='CHAINING',
+                                loadfactor=4.0)
+    return catalog
+
+
+def newCategory():
+    category = {'id': None,
+                'category': None}
+
+    category['id'] = mp.newMap(10000,
+                               maptype='CHAINING',
+                               loadfactor=4.0)
+
+    category['category'] = mp.newMap(10000,
+                                     maptype='CHAINING',
+                                     loadfactor=4.0)
+    return category
+
 
 # Funciones para creacion de datos
 
-# Funciones de consulta
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+# Funciones para agregar informacion al catalogo
+
+
+def addVideo(catalog, video):
+
+    lt.addLast(catalog['videos'], video)
+    mp.put(catalog['title'], video['title'], video)
+
+
+def addTag(catalog, tag):
+    """
+    Adiciona un tag a la tabla de tags dentro del catalogo y se
+    actualiza el indice de identificadores del tag.
+    """
+    newtag = catalog(tag['tag_name'], tag['tag_id'])
+    mp.put(catalog['tags'], tag['tag_name'], newtag)
+    mp.put(catalog['tagIds'], tag['tag_id'], newtag)
+
+
+# ==============================
+# Funciones de consulta
+# ==============================
+
+
+# ==============================
+# Funciones de Comparacion
+# ==============================
+
+
+def compareTagNames(name, tag):
+    tagentry = me.getKey(tag)
+    if (name == tagentry):
+        return 0
+    elif (name > tagentry):
+        return 1
+    else:
+        return -1
+
+
+def compareTagIds(id, tag):
+    tagentry = me.getKey(tag)
+    if (int(id) == int(tagentry)):
+        return 0
+    elif (int(id) > int(tagentry)):
+        return 1
+    else:
+        return 0
+
+
+def cmpVideosByLikes(video1, video2):
+    return (float(video1['likes']) > float(video2['likes']))
 
 # Funciones de ordenamiento

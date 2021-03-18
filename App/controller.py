@@ -31,8 +31,109 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+
+def initCatalog():
+    """
+    Llama la funcion de inicializacion del catalogo del modelo.
+    """
+    catalog = model.newCatalog()
+    return catalog
+
+
 # Funciones para la carga de datos
 
-# Funciones de ordenamiento
+
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    loadVideos(catalog)
+    loadTags(catalog)
+
+
+def loadVideos(catalog):
+    """
+    Carga los libros del archivo.  Por cada libro se indica al
+    modelo que debe adicionarlo al catalogo.
+    """
+    booksfile = cf.data_dir + 'GoodReads/videos-small.csv'
+    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
+    for video in input_file:
+        model.addVideo(catalog, video)
+
+
+def loadTags(catalog):
+    """
+    Carga todos los tags del archivo e indica al modelo
+    que los adicione al catalogo
+    """
+    tagsfile = cf.data_dir + 'GoodReads/tags.csv'
+    input_file = csv.DictReader(open(tagsfile, encoding='utf-8'))
+    for tag in input_file:
+        model.addTag(catalog, tag)
+
 
 # Funciones de consulta sobre el catálogo
+
+
+def getBestBooks(catalog, number):
+    """
+    Retorna los mejores libros según su promedio
+    """
+    bestbooks = model.getBestBooks(catalog, number)
+    return bestbooks
+
+
+def countBooksByTag(catalog, tag):
+    """
+    Retorna los libros que fueron etiquetados con el tag
+    """
+    return model.countBooksByTag(catalog, tag)
+
+
+def booksSize(catalog):
+    """
+    Numero de libros cargados al catalogo
+    """
+    return model.booksSize(catalog)
+
+
+def authorsSize(catalog):
+    """
+    Numero de autores cargados al catalogo
+    """
+    return model.authorsSize(catalog)
+
+
+def tagsSize(catalog):
+    """
+    Numero de tags cargados al catalogo
+    """
+    return model.tagsSize(catalog)
+
+
+def getBooksByAuthor(catalog, authorname):
+    """
+    Retorna los libros de un autor
+    """
+    authorinfo = model.getBooksByAuthor(catalog, authorname)
+    return authorinfo
+
+
+def getBooksByTag(catalog, tagname):
+    """
+    Retorna los libros que han sido marcados con
+    una etiqueta
+    """
+    books = model.getBooksByTag(catalog, tagname)
+    return books
+
+
+def getBooksYear(catalog, year):
+    """
+    Retorna los libros que fueron publicados
+    en un año
+    """
+    books = model.getBooksByYear(catalog, year)
+    return books
