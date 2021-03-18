@@ -49,7 +49,7 @@ def loadData(catalog):
     estructura de datos
     """
     loadVideos(catalog)
-    loadTags(catalog)
+    # loadTags(catalog)
 
 
 def loadVideos(catalog):
@@ -57,7 +57,7 @@ def loadVideos(catalog):
     Carga los libros del archivo.  Por cada libro se indica al
     modelo que debe adicionarlo al catalogo.
     """
-    booksfile = cf.data_dir + 'GoodReads/videos-small.csv'
+    booksfile = cf.data_dir + 'video-samples/videos-small.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)

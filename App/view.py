@@ -138,8 +138,7 @@ while True:
         print('Libros cargados: ' + str(controller.booksSize(cont)))
         print('Autores cargados: ' + str(controller.authorsSize(cont)))
         print('Géneros cargados: ' + str(controller.tagsSize(cont)))
-        
+
     else:
         sys.exit(0)
 sys.exit(0)
-
