@@ -77,7 +77,7 @@ def loadTags(catalog):
 # Funciones de consulta sobre el catálogo
 
 
-def getBestBooks(catalog, number):
+def getBestVideos(catalog, number):
     """
     Retorna los mejores libros según su promedio
     """
@@ -85,55 +85,8 @@ def getBestBooks(catalog, number):
     return bestbooks
 
 
-def countBooksByTag(catalog, tag):
-    """
-    Retorna los libros que fueron etiquetados con el tag
-    """
-    return model.countBooksByTag(catalog, tag)
-
-
-def booksSize(catalog):
+def videosSize(catalog):
     """
     Numero de libros cargados al catalogo
     """
-    return model.booksSize(catalog)
-
-
-def authorsSize(catalog):
-    """
-    Numero de autores cargados al catalogo
-    """
-    return model.authorsSize(catalog)
-
-
-def tagsSize(catalog):
-    """
-    Numero de tags cargados al catalogo
-    """
-    return model.tagsSize(catalog)
-
-
-def getBooksByAuthor(catalog, authorname):
-    """
-    Retorna los libros de un autor
-    """
-    authorinfo = model.getBooksByAuthor(catalog, authorname)
-    return authorinfo
-
-
-def getBooksByTag(catalog, tagname):
-    """
-    Retorna los libros que han sido marcados con
-    una etiqueta
-    """
-    books = model.getBooksByTag(catalog, tagname)
-    return books
-
-
-def getBooksYear(catalog, year):
-    """
-    Retorna los libros que fueron publicados
-    en un año
-    """
-    books = model.getBooksByYear(catalog, year)
-    return books
+    return model.videosSize(catalog)

@@ -144,6 +144,11 @@ def addTag(catalog, tag):
 # Funciones de consulta
 # ==============================
 
+def videosSize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(catalog['videos'])
 
 # ==============================
 # Funciones de Comparacion

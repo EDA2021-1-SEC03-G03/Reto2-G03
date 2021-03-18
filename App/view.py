@@ -135,9 +135,7 @@ while True:
     elif int(inputs[0]) == 2:
         print("Cargando información de los archivos ....")
         controller.loadData(cont)
-        print('Libros cargados: ' + str(controller.booksSize(cont)))
-        print('Autores cargados: ' + str(controller.authorsSize(cont)))
-        print('Géneros cargados: ' + str(controller.tagsSize(cont)))
+        print('Videos cargados: ' + str(controller.videosSize(cont)))
 
     else:
         sys.exit(0)
