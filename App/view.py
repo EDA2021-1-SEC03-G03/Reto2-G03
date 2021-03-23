@@ -73,6 +73,7 @@ while True:
         print("Inicializando Catálogo ....")
         cont = controller.initCatalog()
         controller.loadData(cont)
+        print(cont) #Prueba para ver el catalogo aparece correctamente los videos y las categorias
         print('Videos cargados: ' + str(controller.videosSize(cont)))
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")

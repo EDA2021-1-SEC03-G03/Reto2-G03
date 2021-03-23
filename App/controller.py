@@ -24,7 +24,6 @@ import config as cf
 import model
 import csv
 
-
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -49,6 +48,7 @@ def loadData(catalog):
     estructura de datos
     """
     loadVideos(catalog)
+    loadCategories(catalog)
 
 
 def loadVideos(catalog):
@@ -56,11 +56,19 @@ def loadVideos(catalog):
     Carga los libros del archivo.  Por cada libro se indica al
     modelo que debe adicionarlo al catalogo.
     """
-    booksfile = cf.data_dir + 'videos-10pct.csv'
+    booksfile = cf.data_dir + 'videos-small.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
 
+
+def loadCategories(catalog):
+    catsfile = cf.data_dir + 'category-id.csv'
+    input_file = csv.DictReader(open(catsfile, encoding='utf-8'),
+                                delimiter='\t')
+    for video in input_file:
+        model.addCategory(catalog, video)
+        # model.addVideoCategory(catalog, video) ---> Problemas para crear la relacion de video y categoria
 
 # Funciones de consulta sobre el catálogo
 

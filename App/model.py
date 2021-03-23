@@ -49,17 +49,17 @@ def newCatalog():
 
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
-    catalog["category"] = mp.newMap(34500,
+    catalog["category"] = mp.newMap(1,
                                     maptype='PROBING',
                                     loadfactor=0.5,
                                     comparefunction=compareCategories)
 
     catalog['category_id'] = mp.newMap(37,
-                                       maptype='CHAINING',
-                                       loadfactor=4.0,
+                                       maptype='PROBING', #Cambie el TAD Map porque tenia mas sentido
+                                       loadfactor=0.5,
                                        comparefunction=compareCategoryId)
 
-    catalog['videos_id'] = mp.newMap(34500,
+    catalog['videos_id'] = mp.newMap(1,
                                      maptype='CHAINING',
                                      loadfactor=4.0,
                                      comparefunction=compareVideosId)
@@ -67,13 +67,13 @@ def newCatalog():
     return catalog
 
 
-def newCategory(name, id):
+def newCategory(name, catid):
     category = {'id': None,
                 'category': "",
                 'total_videos': 0,
                 'videos': None}
 
-    category['id'] = id
+    category['id'] = catid
     category['category'] = name
     category['videos'] = lt.newList
     return category
@@ -94,13 +94,13 @@ def addCategory(catalog, category):
     Adiciona un tag a la tabla de categoria dentro del catalogo y se
     actualiza el indice de identificadores de la categoria.
     """
-    newcategory = newCategory(category['category'], category['id'])
-    mp.put(catalog['category'], category['category'], newcategory)
+    newcategory = newCategory(category['name'], category['id'])
+    mp.put(catalog['category'], category['name'], newcategory)
     mp.put(catalog['category_id'], category['id'], newcategory)
 
 
 def addVideoCategory(catalog, category):
-    catid = category['i']
+    catid = category['id']
     pair = mp.get(catalog['category_id'], catid)
 
     i = 0
@@ -108,8 +108,9 @@ def addVideoCategory(catalog, category):
         vidid = lt.getElement(catalog['videos'], i)
         vidcat = vidid['category_id']
         catvid = mp.get(catalog["category"], me.getValue(pair)['category'])
+        print(vidid)
         if catid == vidcat:
-            lt.addLast(catvid['values']['videos'], vidid)
+            mp.addLast(catvid['value']['videos'], vidid['videos'])
         i += 1
 
 # ==============================
