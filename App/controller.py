@@ -68,17 +68,8 @@ def loadCategories(catalog):
                                 delimiter='\t')
     for video in input_file:
         model.addCategory(catalog, video)
-        # model.addVideoCategory(catalog, video) ---> Problemas para crear la relacion de video y categoria
 
 # Funciones de consulta sobre el catálogo
-
-
-def getBestVideos(catalog, number):
-    """
-    Retorna los mejores libros según su promedio
-    """
-    bestbooks = model.getBestBooks(catalog, number)
-    return bestbooks
 
 
 def videosSize(catalog):

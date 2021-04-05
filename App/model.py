@@ -55,7 +55,7 @@ def newCatalog():
                                     comparefunction=compareCategories)
 
     catalog['category_id'] = mp.newMap(37,
-                                       maptype='PROBING', #Cambie el TAD Map porque tenia mas sentido
+                                       maptype='PROBING',
                                        loadfactor=0.5,
                                        comparefunction=compareCategoryId)
 
@@ -85,34 +85,6 @@ def newCategory(name, catid):
 # Funciones para agregar informacion al catalogo
 
 
-def addVideo(catalog, video):
-    lt.addLast(catalog['videos'], video)
-
-
-def addCategory(catalog, category):
-    """
-    Adiciona un tag a la tabla de categoria dentro del catalogo y se
-    actualiza el indice de identificadores de la categoria.
-    """
-    newcategory = newCategory(category['name'], category['id'])
-    mp.put(catalog['category'], category['name'], newcategory)
-    mp.put(catalog['category_id'], category['id'], newcategory)
-
-
-def addVideoCategory(catalog, category):
-    catid = category['id']
-    pair = mp.get(catalog['category_id'], catid)
-
-    i = 0
-    while i < lt.size(catalog['videos']):
-        vidid = lt.getElement(catalog['videos'], i)
-        vidcat = vidid['category_id']
-        catvid = mp.get(catalog["category"], me.getValue(pair)['category'])
-        print(vidid)
-        if catid == vidcat:
-            mp.addLast(catvid['value']['videos'], vidid['videos'])
-        i += 1
-
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -123,14 +95,6 @@ def videosSize(catalog):
     Número de libros en el catago
     """
     return lt.size(catalog['videos'])
-
-
-def getVideosByCat(catalog, category):
-    cat = mp.get(catalog['category'], category)
-    videos = None
-    if category:
-        videos = me.getValue(cat)['videos']
-    return videos
 
 # ==============================
 # Funciones de Comparacion
@@ -170,7 +134,10 @@ def compareCategoryId(id, catid):
 def cmpVideosByLikes(video1, video2):
     return (float(video1['likes']) > float(video2['likes']))
 
+
+# ==============================
 # Funciones de ordenamiento
+# ==============================
 
 
 def sortVideos(catalog, size):
