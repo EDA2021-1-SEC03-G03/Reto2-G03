@@ -43,9 +43,8 @@ los mismos.
 def newCatalog():
 
     catalog = {'videos': None,
-               'video_id': None,
-               'category_id': None,
-               'videos_id': 0}
+               'category': None
+               }
 
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
@@ -54,28 +53,18 @@ def newCatalog():
                                     loadfactor=0.5,
                                     comparefunction=compareCategories)
 
-    catalog['category_id'] = mp.newMap(37,
-                                       maptype='PROBING',
-                                       loadfactor=0.5,
-                                       comparefunction=compareCategoryId)
-
-    catalog['videos_id'] = mp.newMap(1,
-                                     maptype='CHAINING',
-                                     loadfactor=4.0,
-                                     comparefunction=compareVideosId)
-
     return catalog
 
 
-def newCategory(name, catid):
-    category = {'id': None,
-                'category': "",
-                'total_videos': 0,
-                'videos': None}
+def newCategory():
+    category = {'name': None
+                }
 
-    category['id'] = catid
-    category['category'] = name
-    category['videos'] = lt.newList
+    category["name"] = mp.newMap(1,
+                                 maptype='PROBING',
+                                 loadfactor=0.5,
+                                 comparefunction=compareCategories)    
+
     return category
 
 
@@ -84,6 +73,21 @@ def newCategory(name, catid):
 
 # Funciones para agregar informacion al catalogo
 
+
+def addCategoryInfo(category):
+
+
+
+
+def traduceCategoryToId(categoryList, category_name):
+    iterator = 0
+    while iterator < (lt.size(categoryList)):
+
+        category = categoryList['elements'][iterator]['category']
+
+        if category_name in category:
+            return categoryList['elements'][iterator]['id']
+        iterator += 1
 
 # ==============================
 # Funciones de consulta

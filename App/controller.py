@@ -66,8 +66,12 @@ def loadCategories(catalog):
     catsfile = cf.data_dir + 'category-id.csv'
     input_file = csv.DictReader(open(catsfile, encoding='utf-8'),
                                 delimiter='\t')
-    for video in input_file:
-        model.addCategory(catalog, video)
+
+    for category in input_file:
+        cl = model.addCategoryInfo(category)
+
+    return cl
+
 
 # Funciones de consulta sobre el catálogo
 
