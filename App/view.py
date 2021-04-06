@@ -71,20 +71,20 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        cont = controller.initCatalog()
-        controller.loadData(cont)
-        print(cont) #Prueba para ver el catalogo aparece correctamente los videos y las categorias
-        print('Videos cargados: ' + str(controller.videosSize(cont)))
+        catalogTuple = controller.initCatalog()
+        controller.loadData(catalogTuple[0], catalogTuple[1])
+
+        print('Videos cargados: ' + str(controller.videosSize(catalogTuple[0])))
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
         if size < 1:
             print("El numero ingresado es mucho menor a lo esperado, trate con uno mayor")
             break
-        elif size > controller.videosSize(cont):
+        elif size > controller.videosSize(catalogTuple[0]):
             print("El numero es demasiado grande trate con uno menor")
             break
-        result = controller.getVideosByCat(cont, category)
+        result = controller.getVideosByCat(catalogTuple[0], category)
         newlist = controller.sortVideos(result, size)
         print("Cargando información de los archivos ....")
         printreq1(newlist, size)

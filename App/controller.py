@@ -23,6 +23,7 @@
 import config as cf
 import model
 import csv
+from DISClib.ADT import list as lt
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -36,19 +37,21 @@ def initCatalog():
     Llama la funcion de inicializacion del catalogo del modelo.
     """
     catalog = model.newCatalog()
-    return catalog
+    catCategory = model.newCategory()
+
+    return catalog, catCategory
 
 
 # Funciones para la carga de datos
 
 
-def loadData(catalog):
+def loadData(catalog, catCategory):
     """
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
     loadVideos(catalog)
-    loadCategories(catalog)
+    loadCategories(catCategory)
 
 
 def loadVideos(catalog):
@@ -61,16 +64,16 @@ def loadVideos(catalog):
     for video in input_file:
         model.addVideo(catalog, video)
 
+    print(type(lt.getElement(catalog['videos'], 0)))
 
-def loadCategories(catalog):
+
+def loadCategories(catCategory):
     catsfile = cf.data_dir + 'category-id.csv'
     input_file = csv.DictReader(open(catsfile, encoding='utf-8'),
                                 delimiter='\t')
 
     for category in input_file:
-        cl = model.addCategoryInfo(category)
-
-    return cl
+        model.addCategoryInfo(catCategory, category)
 
 
 # Funciones de consulta sobre el catálogo
