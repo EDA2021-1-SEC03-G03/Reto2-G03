@@ -23,7 +23,6 @@
 import config as cf
 import model
 import csv
-from DISClib.ADT import list as lt
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -63,8 +62,7 @@ def loadVideos(catalog):
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
-
-    print(type(lt.getElement(catalog['videos'], 0)))
+    # print()
 
 
 def loadCategories(catCategory):

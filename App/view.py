@@ -36,6 +36,7 @@ operación solicitada
 
 # Menu de opciones
 
+
 def printMenu():
     print("Bienvenido")
     print("1- Inicializar Catálogo")
@@ -58,7 +59,7 @@ def loadData(catalog):
     controller.loadData(catalog)
 
 
-def printreq1(catlogo, size):
+def printreq1(catalog, size):
     for video in lt.iterator(catalog):
         print('Titulo: ' + video['video'] + 'Likes: ' + video['likes'])
 
@@ -74,12 +75,14 @@ while True:
         catalogTuple = controller.initCatalog()
         controller.loadData(catalogTuple[0], catalogTuple[1])
 
-        print('Videos cargados: ' + str(controller.videosSize(catalogTuple[0])))
+        print('Videos cargados: ' + str(controller.videosSize(catalogTuple[0],
+                                                              )))
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
         if size < 1:
-            print("El numero ingresado es mucho menor a lo esperado, trate con uno mayor")
+            print("El numero ingresado es mucho menor a lo esperado,",
+                  " trate con uno mayor")
             break
         elif size > controller.videosSize(catalogTuple[0]):
             print("El numero es demasiado grande trate con uno menor")
