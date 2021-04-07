@@ -69,7 +69,7 @@ def newCategory():
     category["name"] = mp.newMap(33,
                                  maptype='PROBING',
                                  loadfactor=0.5,
-                                 comparefunction=compareCategories)    
+                                 comparefunction=compareCategories)
 
     return category
 
@@ -106,7 +106,7 @@ def addVideo(catalog, video, catCategory):
         en funcion de la categoria a la que pertenece.
     '''
     categories = catalog['category']
-    catName = traduceIdtoCat(catCategory, video['category_id'])
+    catName = convertIdtoCat(catCategory, video['category_id'])
     present = mp.contains(categories, catName)
     if present:
         entry = mp.get(categories, catName)
@@ -122,18 +122,17 @@ def addVideo(catalog, video, catCategory):
 # ==============================
 
 
-def traduceIdtoCat(catCategory, categoryId):
+def convertIdtoCat(catCategory, categoryId):
     pair = mp.get(catCategory['name'], categoryId)
     return pair['value']
 
 
 def reqNvideos(catalog, name, size):
-    value = mp.get(catalog['category'], name)
-    print(value)
-    '''
-    ready = me.getValue(value)['videos']
-    newlist = sortVideos(ready, size)
-    return newlist'''
+    parameter = ' ' + name
+    pair = mp.get(catalog['category'], parameter)
+    value_list = me.getValue(pair)
+    newlist = sortVideos(value_list, size)
+    return newlist
 
 
 def videosSize(catalog):
@@ -186,7 +185,10 @@ def cmpVideosByLikes(video1, video2):
 # ==============================
 
 
-def sortVideos(catalog, size):
-    sublist = lt.subList(catalog, 0, size)
-    newlist = sa.sort(sublist, cmpVideosByLikes)
+def sortVideos(value_list, size):
+    '''
+    print(value_list)
+    sublist = lt.subList(value_list, 0, size)
+    '''
+    newlist = sa.sort(value_list, cmpVideosByLikes)
     return newlist
