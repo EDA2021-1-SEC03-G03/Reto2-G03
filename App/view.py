@@ -56,7 +56,9 @@ def loadData(catalog, catCategory):
     """
     Carga los libros en el catalogo
     """
-    controller.loadData(catalog, catCategory)
+    time = controller.loadData(catalog, catCategory)
+
+    return time
 
 
 def printreq1(catalog, size):
@@ -73,8 +75,11 @@ while True:
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
         catTuple = initCatalog()
-        loadData(catTuple[0], catTuple[1])
+        time = loadData(catTuple[0], catTuple[1])
         print('Videos cargados: ' + str(controller.videosSize(catTuple[0],)))
+        print("Tiempo [ms]: ", f"{time[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{time[1]:.3f}")
+      
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
