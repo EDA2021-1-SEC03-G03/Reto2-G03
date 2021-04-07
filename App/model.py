@@ -37,15 +37,18 @@ Se define la estructura de un catálogo de videos.
 El catálogo tendrá dos listas, una para los videos,
     otra para las categorias de los mismos.
 """
-
+# ==============================
 # Construccion de modelos
+# ==============================
 
 
 def newCatalog():
+    '''
+        Creamos el catalogo para agegar la informacion necesaria
+    '''
 
     catalog = {'videos': None,
-               'category': None
-               }
+               'category': None}
 
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
@@ -58,8 +61,10 @@ def newCatalog():
 
 
 def newCategory():
-    category = {'name': None
-                }
+    '''
+        Catalogo especial para las categorias y sus id's
+    '''
+    category = {'name': None}
 
     category["name"] = mp.newMap(33,
                                  maptype='PROBING',
@@ -68,42 +73,67 @@ def newCategory():
 
     return category
 
-
+# ==============================
 # Funciones para creacion de datos
+# ==============================
 
 
+def videoCategories():
+    catcatalog = {'videos': None}
+    catcatalog['videos'] = lt.newList("ARRAY_LIST")
+    return catcatalog
+
+
+# ==============================
 # Funciones para agregar informacion al catalogo
+# ==============================
 
 
-def addVideo(catalog, video):
+def addVideoToCat(catalog, video):
     lt.addLast(catalog['videos'], video)
 
 
 def addCategoryInfo(catCategory, category):
-
+    '''Esta funcion agrega en un mapa especial las categorias
+       cuya llave es el id correspondiente
+    '''
     mp.put(catCategory['name'], category['id'], category['name'])
 
 
-def addCategoryCatalog(catCategory, catalog):
-    # ESTA ES UNA OPCION DE COMO HACERLO
-    for video in catalog['videos']:
-        if video['category'] in catCategory['id']:
-            mp.put(catalog['category'], catCategory['id'], video['title'])
-    # ESTA ES OTRA OPCION DE COMO HACERLO
-    i = 0
-    while i < lt.size(catalog['videos']):
-        video = lt.getElement(catalog['videos'], i)
-        if video['category'] in catCategory['id']:
-            mp.put(catalog['category'], catCategory['id'], video['title'])        
-
-    # mp.put(catCategory['name'], category['id'], category['name'])
-
-    return None
+def addVideo(catalog, video, catCategory):
+    '''
+        Funcion que agrega la informacion de los videos
+        en funcion de la categoria a la que pertenece.
+    '''
+    categories = catalog['category']
+    catName = traduceIdtoCat(catCategory, video['category_id'])
+    present = mp.contains(categories, catName)
+    if present:
+        entry = mp.get(categories, catName)
+        cat = me.getValue(entry)
+    else:
+        cat = videoCategories()
+        mp.put(categories, catName, cat)
+    lt.addLast(cat['videos'], video)
 
 
 # ==============================
 # Funciones de consulta
 # ==============================
+
+
+def traduceIdtoCat(catCategory, categoryId):
+    pair = mp.get(catCategory['name'], categoryId)
+    return pair['value']
+
+
+def reqNvideos(catalog, name, size):
+    value = mp.get(catalog['category'], name)
+    print(value)
+    '''
+    ready = me.getValue(value)['videos']
+    newlist = sortVideos(ready, size)
+    return newlist'''
 
 
 def videosSize(catalog):

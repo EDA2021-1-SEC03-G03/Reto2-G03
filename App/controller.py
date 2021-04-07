@@ -49,20 +49,8 @@ def loadData(catalog, catCategory):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    loadVideos(catalog)
-    loadCategories(catCategory)
-
-
-def loadVideos(catalog):
-    """
-    Carga los libros del archivo.  Por cada libro se indica al
-    modelo que debe adicionarlo al catalogo.
-    """
-    booksfile = cf.data_dir + 'videos-small.csv'
-    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
-    for video in input_file:
-        model.addVideo(catalog, video)
-    # print()
+    catCategory = loadCategories(catCategory)
+    loadVideos(catalog, catCategory)
 
 
 def loadCategories(catCategory):
@@ -72,6 +60,20 @@ def loadCategories(catCategory):
 
     for category in input_file:
         model.addCategoryInfo(catCategory, category)
+
+    return catCategory
+
+
+def loadVideos(catalog, catCategory):
+    """
+    Carga los libros del archivo.  Por cada libro se indica al
+    modelo que debe adicionarlo al catalogo.
+    """
+    booksfile = cf.data_dir + 'videos-small.csv'
+    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
+    for video in input_file:
+        model.addVideoToCat(catalog, video)
+        model.addVideo(catalog, video, catCategory)
 
 
 # Funciones de consulta sobre el catálogo
@@ -84,9 +86,6 @@ def videosSize(catalog):
     return model.videosSize(catalog)
 
 
-def sortVideos(catalog, size):
-    return model.sortVideos(catalog, size)
+def reqNvideos(catalog, name, size):
+    return model.reqNvideos(catalog, name, size)
 
-
-def getVideosByCat(catalog, category):
-    return model.getVideosByCat(catalog, category)

@@ -52,11 +52,11 @@ def initCatalog():
     return controller.initCatalog()
 
 
-def loadData(catalog):
+def loadData(catalog, catCategory):
     """
     Carga los libros en el catalogo
     """
-    controller.loadData(catalog)
+    controller.loadData(catalog, catCategory)
 
 
 def printreq1(catalog, size):
@@ -72,11 +72,9 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        catalogTuple = controller.initCatalog()
-        controller.loadData(catalogTuple[0], catalogTuple[1])
-
-        print('Videos cargados: ' + str(controller.videosSize(catalogTuple[0],
-                                                              )))
+        catTuple = initCatalog()
+        loadData(catTuple[0], catTuple[1])
+        print('Videos cargados: ' + str(controller.videosSize(catTuple[0],)))
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
@@ -84,10 +82,10 @@ while True:
             print("El numero ingresado es mucho menor a lo esperado,",
                   " trate con uno mayor")
             break
-        elif size > controller.videosSize(catalogTuple[0]):
+        elif size > controller.videosSize(catTuple[0]):
             print("El numero es demasiado grande trate con uno menor")
             break
-        result = controller.getVideosByCat(catalogTuple[0], category)
+        result = controller.reqNvideos(catTuple[0], category, size)
         newlist = controller.sortVideos(result, size)
         print("Cargando información de los archivos ....")
         printreq1(newlist, size)
