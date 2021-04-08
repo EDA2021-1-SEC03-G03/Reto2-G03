@@ -1,9 +1,12 @@
 #ISIS1225 - Librerias de soporte
 
+Estudiantes:
+    req. 2 Daniel Andrés Bernal Cáceres, 202020706
 
-        req. 2 Daniel Andrés Bernal Cáceres, 202020706, da.bernalc1@uniandes.edu.co
-
-        req. 3 Juan Martín Santos Ayala, 202013610, j.santosa@uniandes.edu.co
+    req. 3 Juan Martín Santos Ayala, 202013610
+Correos:
+    da.bernalc1@uniandes.edu.co
+    j.santosa@uniandes.edu.co
 
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
