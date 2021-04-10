@@ -70,6 +70,8 @@ def loadData(catalog, catCategory):
 
     return delta_time, delta_memory
 
+# USAR ITERADORES
+
 
 def loadCategories(catCategory):
     catsfile = cf.data_dir + 'category-id.csv'
@@ -104,8 +106,8 @@ def videosSize(catalog):
     return model.videosSize(catalog)
 
 
-def reqNvideos(catalog, name, size):
-    return model.reqNvideos(catalog, name, size)
+def reqNvideos(catalog, name):
+    return model.reqNvideos(catalog, name)
 
 
 # ======================================

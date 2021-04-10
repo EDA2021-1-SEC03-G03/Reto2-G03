@@ -23,7 +23,7 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT import list as lt
+#from DISClib.DataStructures import arraylistiterator as lt
 assert cf
 
 
@@ -62,8 +62,11 @@ def loadData(catalog, catCategory):
 
 
 def printreq1(catalog, size):
-    for video in lt.iterator(catalog):
-        print('Titulo: ' + video['video'] + 'Likes: ' + video['likes'])
+    video = catalog['elements']
+    i = 0
+    while i <= size:
+        print('Titulo: ', video[i]['title'], 'Likes: ', video[i]['likes'])
+        i += 1
 
 
 # Menu principal
@@ -79,7 +82,7 @@ while True:
         print('Videos cargados: ' + str(controller.videosSize(catTuple[0],)))
         print("Tiempo [ms]: ", f"{time[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{time[1]:.3f}")
-      
+
     elif int(inputs[0]) == 2:
         category = input("Ingrese la categoria que desea consultar:\n")
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
@@ -90,10 +93,9 @@ while True:
         elif size > controller.videosSize(catTuple[0]):
             print("El numero es demasiado grande trate con uno menor")
             break
-        result = controller.reqNvideos(catTuple[0], category, size)
-        newlist = controller.sortVideos(result, size)
+        result = controller.reqNvideos(catTuple[0], category)
         print("Cargando información de los archivos ....")
-        printreq1(newlist, size)
+        printreq1(result, size)
 
     else:
         sys.exit(0)

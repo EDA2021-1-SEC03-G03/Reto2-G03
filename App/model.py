@@ -29,7 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import quicksort as qs
 assert cf
 
 """
@@ -127,10 +127,11 @@ def convertIdtoCat(catCategory, categoryId):
     return pair['value']
 
 
-def reqNvideos(catalog, name, size):
+def reqNvideos(catalog, name):
     parameter = ' ' + name
     pair = mp.get(catalog['category'], parameter)
     value_list = me.getValue(pair)
+    size = videosSize(value_list)
     newlist = sortVideos(value_list, size)
     return newlist
 
@@ -186,9 +187,6 @@ def cmpVideosByLikes(video1, video2):
 
 
 def sortVideos(value_list, size):
-    '''
-    print(value_list)
-    sublist = lt.subList(value_list, 0, size)
-    '''
-    newlist = sa.sort(value_list, cmpVideosByLikes)
+    thelist = value_list['videos']
+    newlist = qs.sort(thelist, cmpVideosByLikes)
     return newlist
