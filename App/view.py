@@ -23,7 +23,6 @@
 import config as cf
 import sys
 import controller
-#from DISClib.DataStructures import arraylistiterator as lt
 assert cf
 
 
@@ -64,7 +63,7 @@ def loadData(catalog, catCategory):
 def printreq1(catalog, size):
     video = catalog['elements']
     i = 0
-    while i <= size:
+    while i < size:
         print('Titulo: ', video[i]['title'], 'Likes: ', video[i]['likes'])
         i += 1
 
