@@ -22,7 +22,7 @@
  * Contribuciones:
  *
  * Dario Correal - Version inicial
- """
+"""
 
 
 import config as cf
@@ -30,58 +30,51 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import quicksort as qs
+from DISClib.DataStructures import arraylistiterator as ite
 assert cf
 
 """
-Se define la estructura de un catálogo de videos.
-El catálogo tendrá dos listas, una para los videos,
-    otra para las categorias de los mismos.
+Se define la estructura de un catálogo de videos. El catálogo tendrá dos
+listas, una para los videos, otra para las categorias de los mismos.
 """
+
+
 # ==============================
 # Construccion de modelos
 # ==============================
 
-
 def newCatalog():
     '''
-        Creamos el catalogo para agegar la informacion necesaria
+    Creamos un catalogo donde se agregara toda
+    la informacion de los videos
     '''
-
     catalog = {'videos': None,
-               'category': None}
-
+               'category_id': None,
+               'category': None,
+               'country': None,
+               'days': None}
+    '''
+    Definimos los TAD que cada parte del catalago
+    va a tener
+    '''
     catalog['videos'] = lt.newList('ARRAY_LIST')
 
+    catalog['category_id'] = mp.newMap(33,
+                                       maptype='PROBING',
+                                       loadfactor=0.5,
+                                       comparefunction=compareCategories)
+
     catalog["category"] = mp.newMap(33,
-                                    maptype='CHAINING',
-                                    loadfactor=4.0,
+                                    maptype='PROBING',
+                                    loadfactor=0.5,
                                     comparefunction=compareCategories)
 
+    catalog["country"] = mp.newMap(11,
+                                   maptype='PROBING',
+                                   loadfactor=0.5,
+                                   comparefunction=compareCategories)
+
     return catalog
-
-
-def newCategory():
-    '''
-        Catalogo especial para las categorias y sus id's
-    '''
-    category = {'name': None}
-
-    category["name"] = mp.newMap(33,
-                                 maptype='PROBING',
-                                 loadfactor=0.5,
-                                 comparefunction=compareCategories)
-
-    return category
-
-# ==============================
-# Funciones para creacion de datos
-# ==============================
-
-
-def videoCategories():
-    catcatalog = {'videos': None}
-    catcatalog['videos'] = lt.newList("ARRAY_LIST")
-    return catcatalog
 
 
 # ==============================
@@ -90,62 +83,169 @@ def videoCategories():
 
 
 def addVideoToCat(catalog, video):
+    '''
+    Esta funcion agrega toda la informacion del archivo
+    en una lista de tipo ARRAY_LIST, esta la usamos para
+    conocer el size que lo necesitamos en varias funciones
+    '''
     lt.addLast(catalog['videos'], video)
 
 
-def addCategoryInfo(catCategory, category):
-    '''Esta funcion agrega en un mapa especial las categorias
-       cuya llave es el id correspondiente
+def addCategoryInfo(catalog, category):
     '''
-    mp.put(catCategory['name'], category['id'], category['name'])
+    Esta funcion agrega la relacion de las categorias con
+    su id en el catalogo en la llave "category_id"
+    '''
+    mp.put(catalog['category_id'], category['id'], category['name'].lower())
 
 
-def addVideo(catalog, video, catCategory):
+def addVideo(catalog, video):
     '''
-        Funcion que agrega la informacion de los videos
-        en funcion de la categoria a la que pertenece.
+        Funcion que agrega la informacion de los videos en
+        el catalogo en la llave "category" segun a la categoria
+        a la que pertenecen. La llave mencionada es un mapa por
+        lo que la categoria va a ser la llave y el valor va a
+        ser una lista con todos los videos y su informacion que
+        pertenecen a esa categoria
     '''
     categories = catalog['category']
-    catName = convertIdtoCat(catCategory, video['category_id'])
+    catName = convertIdtoCat(catalog, video['category_id'])
     present = mp.contains(categories, catName)
     if present:
         entry = mp.get(categories, catName)
         cat = me.getValue(entry)
     else:
-        cat = videoCategories()
+        cat = videoCatalog()
         mp.put(categories, catName, cat)
     lt.addLast(cat['videos'], video)
+
+
+def addCountry(catalog, video):
+    '''
+        Funcion que agrega la informacion de los videos en
+        el catalogo en la llave "category" segun a la categoria
+        a la que pertenecen. La llave mencionada es un mapa por
+        lo que la categoria va a ser la llave y el valor va a
+        ser una lista con todos los videos y su informacion que
+        pertenecen a esa categoria
+    '''
+    country = catalog['country']
+    countryName = video['country']
+    present = mp.contains(country, countryName)
+    if present:
+        entry = mp.get(country, countryName)
+        cat = me.getValue(entry)
+    else:
+        cat = videoCatalog()
+        mp.put(country, countryName, cat)
+    lt.addLast(cat['videos'], video)
+
+
+# ==============================
+# Funciones para creacion de datos
+# ==============================
+
+def videoCatalog():
+    '''
+    Esta funcion crea una lista en donde se almacenaran
+    todos los videos de una categoria y retornara la lista
+    llena
+    '''
+    vidcatalog = {'videos': None}
+    vidcatalog['videos'] = lt.newList("ARRAY_LIST")
+    return vidcatalog
+
+
+def daysCatalog():
+    '''
+    Esta funcion crea una lista en donde se almacenaran
+    todos los videos de una categoria y retornara la lista
+    llena
+    '''
+    vidcatalog = {'days': None}
+    vidcatalog['days'] = lt.newList("ARRAY_LIST")
+    return vidcatalog
 
 
 # ==============================
 # Funciones de consulta
 # ==============================
 
-
-def convertIdtoCat(catCategory, categoryId):
-    pair = mp.get(catCategory['name'], categoryId)
+def convertIdtoCat(catalog, categoryId):
+    '''
+    Esta funcion traduce el id de una categoria en su
+    respectivo valor (el nombre de la categoria) y
+    lo retorna
+    '''
+    pair = mp.get(catalog['category_id'], categoryId)
     return pair['value']
 
 
-def reqNvideos(catalog, name):
-    parameter = ' ' + name
+def getVideosCat(catalog, category, country):
+    '''
+    Esta funcion retorna una lista con todos los videos
+    y su informacion que hay en una categoria pasada por
+    parametro, esta es proporcionada por el usuario
+    '''
+    # Tiene un espacio porque los nombres de las categorias se guardaron asi
+    parameter = ' ' + category
+    # Obtenemos la pareja llave valor de la categoria
     pair = mp.get(catalog['category'], parameter)
-    value_list = me.getValue(pair)
-    size = videosSize(value_list)
-    newlist = sortVideos(value_list, size)
+    if pair is None:
+        newlist = 1
+    else:
+        # Sacamos la informacion de la pareja y es la lista con los videos
+        category_list = me.getValue(pair)
+        countryList = lt.newList('ARRAY_LIST')
+        iterator = ite.newIterator(category_list['videos'])
+        while ite.hasNext(iterator):
+            info = ite.next(iterator)
+            if info['country'].lower() == country.lower():
+                lt.addLast(countryList, info)
+        # Organizamos la lista de los videos por la cantidad de likes
+        newlist = sortVideos(countryList)
     return newlist
+
+
+def mostTrendingVideoCat(catalog, category):
+    # Tiene un espacio porque los nombres de las categorias se guardaron asi
+    parameter = ' ' + category
+    # Obtenemos la pareja llave valor de la categoria
+    pair = mp.get(catalog['category'], parameter)
+    if pair is None:
+        newlist = 1
+        days = 0
+    else:
+        # Sacamos la informacion de la pareja y es la lista con los videos
+        category_list = me.getValue(pair)
+        dicttionary = {}
+        iterator = ite.newIterator(category_list['videos'])
+        while ite.hasNext(iterator):
+            info = ite.next(iterator)
+            newinfo = (info['title'], info['channel_title'], 
+                       info['category_id'])
+            llist = [1]
+            if newinfo in dicttionary:
+                dicttionary[newinfo].append(1)
+            else:
+                dicttionary[newinfo] = llist
+
+        newlist = max(dicttionary, key=dicttionary.get)
+        days = dicttionary[newlist]
+
+    return newlist, days
 
 
 def videosSize(catalog):
     """
     Número de libros en el catago
     """
-    return lt.size(catalog['videos'])
+    return lt.size(catalog)
+
 
 # ==============================
-# Funciones de Comparacion
+# Funciones utilizadas para comparar elementos dentro de una lista
 # ==============================
-
 
 def compareVideosId(id, entry):
     identry = me.getKey(entry)
@@ -181,12 +281,22 @@ def cmpVideosByLikes(video1, video2):
     return (float(video1['likes']) > float(video2['likes']))
 
 
+def cmpVideosByViews(video1, video2):
+    return (float(video1['views']) > float(video2['views']))
+
+
 # ==============================
 # Funciones de ordenamiento
 # ==============================
 
-
-def sortVideos(value_list, size):
-    thelist = value_list['videos']
-    newlist = qs.sort(thelist, cmpVideosByLikes)
+def sortVideos(value_list):
+    '''
+    Esta funcion organiza los videos por la cantidad
+    de likes que tiene el video y retorna la lista
+    ordenada
+    '''
+    if lt.isEmpty(value_list):
+        newlist = 1
+    else:
+        newlist = qs.sort(value_list, cmpVideosByViews)
     return newlist

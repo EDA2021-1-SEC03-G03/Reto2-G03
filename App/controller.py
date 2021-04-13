@@ -20,100 +20,34 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-import time
-import tracemalloc
 import config as cf
 import model
 import csv
+import time
+import tracemalloc
+
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-# Inicialización del Catálogo de libros
 
+# ==============================
+# Inicialización del Catálogo de libros
+# ==============================
 
 def initCatalog():
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
     catalog = model.newCatalog()
-    catCategory = model.newCategory()
 
-    return catalog, catCategory
-
-
-# Funciones para la carga de datos
-
-
-def loadData(catalog, catCategory):
-    """
-    Carga los datos de los archivos y cargar los datos en la
-    estructura de datos
-    """
-    delta_time = -1.0
-    delta_memory = -1.0
-
-    tracemalloc.start()
-    start_time = getTime()
-    start_memory = getMemory()
-
-    catCategory = loadCategories(catCategory)
-    loadVideos(catalog, catCategory)
-
-    stop_memory = getMemory()
-    stop_time = getTime()
-    tracemalloc.stop()
-
-    delta_time = stop_time - start_time
-    delta_memory = deltaMemory(start_memory, stop_memory)
-
-    return delta_time, delta_memory
-
-# USAR ITERADORES
-
-
-def loadCategories(catCategory):
-    catsfile = cf.data_dir + 'category-id.csv'
-    input_file = csv.DictReader(open(catsfile, encoding='utf-8'),
-                                delimiter='\t')
-
-    for category in input_file:
-        model.addCategoryInfo(catCategory, category)
-
-    return catCategory
-
-
-def loadVideos(catalog, catCategory):
-    """
-    Carga los libros del archivo.  Por cada libro se indica al
-    modelo que debe adicionarlo al catalogo.
-    """
-    booksfile = cf.data_dir + 'videos-small.csv'
-    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
-    for video in input_file:
-        model.addVideoToCat(catalog, video)
-        model.addVideo(catalog, video, catCategory)
-
-
-# Funciones de consulta sobre el catálogo
-
-
-def videosSize(catalog):
-    """
-    Numero de libros cargados al catalogo
-    """
-    return model.videosSize(catalog)
-
-
-def reqNvideos(catalog, name):
-    return model.reqNvideos(catalog, name)
+    return catalog
 
 
 # ======================================
 # Funciones para medir tiempo y memoria
 # ======================================
-
 
 def getTime():
     """
@@ -143,3 +77,84 @@ def deltaMemory(start_memory, stop_memory):
     # de Byte -> kByte
     delta_memory = delta_memory/1024.0
     return delta_memory
+
+
+# ==============================
+# Funciones para la carga de datos
+# ==============================
+
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos y calcula el tiempo y memoria invertido
+    en el proceso
+    """
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    loadCategories(catalog)
+    loadVideos(catalog)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return delta_time, delta_memory
+
+
+# ==============================
+# Funciones de ordenamiento
+# ==============================
+
+def loadCategories(catalog):
+    '''
+    Carga las categorias del archivo en el catalog
+    '''
+    catsfile = cf.data_dir + 'category-id.csv'
+    input_file = csv.DictReader(open(catsfile, encoding='utf-8'),
+                                delimiter='\t')
+    for category in input_file:
+        model.addCategoryInfo(catalog, category)
+
+
+def loadVideos(catalog):
+    """
+    Carga los videos del archivo al catalogo
+    """
+    booksfile = cf.data_dir + 'videos-small.csv'
+    input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
+
+    for video in input_file:
+        model.addVideoToCat(catalog, video)
+        model.addVideo(catalog, video)
+        model.addCountry(catalog, video)
+
+
+# ==============================
+# Funciones de consulta sobre el catálogo
+# ==============================
+
+def videosSize(catalog):
+    """
+    Numero de libros cargados al catalogo
+    """
+    return model.videosSize(catalog)
+
+
+def getVideosCat(catalog, name, country):
+    '''
+    Funcion que comunica lo deseado con el usuario con
+    la funcion de consulta en el modelo
+    '''
+    return model.getVideosCat(catalog, name, country)
+
+
+def mostTrendingVideoCat(catalog, category):
+    return model.mostTrendingVideoCat(catalog, category)

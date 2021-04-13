@@ -33,42 +33,73 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
-# Menu de opciones
 
+# ==============================
+# Menu de opciones
+# ==============================
 
 def printMenu():
     print("Bienvenido")
-    print("1- Inicializar Catálogo")
-    print("2- Cargar los n videos con mas likes en una categoria")
+    print("1- Cargar información en el catálogo")
+    print("2- Consultar las tendencias por pais y categoria")
+    print("3- Daniel")
+    print("4- Consultar el video mas trending por categoria")
+    print("5- Pendiente")
 
 
+# ==============================
 # Funciones de inicializacion
+# ==============================
 
 def initCatalog():
     """
-    Inicializa el catalogo de libros
+        Inicializa el catalogo de libros
     """
     return controller.initCatalog()
 
 
-def loadData(catalog, catCategory):
+def loadData(catalog):
     """
-    Carga los libros en el catalogo
+        Carga los libros en el catalogo
     """
-    time = controller.loadData(catalog, catCategory)
+    time = controller.loadData(catalog)
 
     return time
 
 
-def printreq1(catalog, size):
+def printNVideosCat(catalog, size):
     video = catalog['elements']
+    print("\nLos primeros", str(size), "videos ordenados son: ")
     i = 0
     while i < size:
-        print('Titulo: ', video[i]['title'], 'Likes: ', video[i]['likes'])
+        print('\nVideo:', i + 1)
+        print('\n\tTrending date: [', video[i]['trending_date'],
+              ']\n\tTitle: [', video[i]['title'],
+              ']\n\tChannel title: [', video[i]['channel_title'],
+              ']\n\tPublish time: [', video[i]['publish_time'],
+              ']\n\tViews: [', video[i]['views'],
+              ']\n\tLikes: [', video[i]['likes'],
+              ']\n\tDislikes: [', video[i]['dislikes'],
+              ']')
         i += 1
 
 
+def reqDaniel():
+    return None
+
+
+def printMostTrendingVid(video, days):
+    print("\nEl video con mas dias en tendencia de la catgoria es: ")
+    print('\n\tTitle: [', video[0],
+          ']\n\tChannel title: [', video[1],
+          ']\n\tCategory Id: [', video[2],
+          ']\n\tDays: [', len(days),
+          ']')
+
+
+# ==============================
 # Menu principal
+# ==============================
 
 while True:
     printMenu()
@@ -76,26 +107,65 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        catTuple = initCatalog()
-        time = loadData(catTuple[0], catTuple[1])
-        print('Videos cargados: ' + str(controller.videosSize(catTuple[0],)))
+        # Inicia el catalogo y carga la informacion en el
+        catalog = initCatalog()
+        time = loadData(catalog)
+        # Imprime la cantidad de videos cargados
+        print('Videos cargados: ' + str(controller.videosSize(catalog['videos']
+                                                              )))
+        # Imprime el tiempo y memoria consumida en el proceso
         print("Tiempo [ms]: ", f"{time[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{time[1]:.3f}")
 
     elif int(inputs[0]) == 2:
-        category = input("Ingrese la categoria que desea consultar:\n")
+        # Recibe la categoria y la cantidad de videos que el usuario desea ver
+        country = input("Ingrese el pais que desea consultar:\n")
+        category = input("Ingrese la categoria que desea consultar:\n").lower()
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
+
         if size < 1:
             print("El numero ingresado es mucho menor a lo esperado,",
                   " trate con uno mayor")
             break
-        elif size > controller.videosSize(catTuple[0]):
+
+        elif size > controller.videosSize(catalog['videos']):
             print("El numero es demasiado grande trate con uno menor")
             break
-        result = controller.reqNvideos(catTuple[0], category)
-        print("Cargando información de los archivos ....")
-        printreq1(result, size)
+        # Si los parametros son correctos el programa procede con la busqueda
+        result = controller.getVideosCat(catalog, category, country)
+        if result == 1:
+            print('\n# ======================================================')
+            print('No se encontraron videos en el pais y categoria deseados')
+            print('# ======================================================\n')
+        else:
+            print("Cargando información de los archivos ....")
+            printNVideosCat(result, size)
 
+    elif int(inputs[0]) == 3:
+        # Recibe la categoria y la cantidad de videos que el usuario desea ver
+        country = input("Ingrese el pais que desea consultar:\n")
+
+        if result == 1:
+            print('\n# ======================================================')
+            print('No se encontraron videos en el pais y categoria deseados')
+            print('# ======================================================\n')
+        else:
+            print("Cargando información de los archivos ....")
+            # Print del requerimiento
+
+    elif int(inputs[0]) == 4:
+        # Recibe la categoria y la cantidad de videos que el usuario desea ver
+        category = input("Ingrese la categoria que desea consultar:\n").lower()
+
+        # Si los parametros son correctos el programa procede con la busqueda
+        result = controller.mostTrendingVideoCat(catalog, category)
+        if result[0] == 1 and result[1] == 0:
+            print('\n# ======================================================')
+            print('No se encontraron videos en el pais y categoria deseados')
+            print('# ======================================================\n')
+        else:
+            print("Cargando información de los archivos ....")
+            printMostTrendingVid(result[0], result[1])
     else:
         sys.exit(0)
 sys.exit(0)
