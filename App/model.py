@@ -227,12 +227,14 @@ def mostTrendingVideoCat(catalog, category):
         while ite.hasNext(iterator):
             info = ite.next(iterator)
             # Seleccionamos los valores que son utiles para la busqueda
-            newinfo = (info['title'], info['channel_title'], 
+            newinfo = (info['title'], info['channel_title'],
                        info['category_id'])
             '''
-            iniciamos una lista con un 1 lo que significa que encontro 1 video,
-            se agrega un 1 a la lista que es el valor del diccionario cuyas
-            llaves son el string de newinfo
+            Iniciamos una lista con 1 que va a ser la primera vez que la info
+            de un video se guardo en el diccionario. Cada vez que se encuentra
+            la misma informacion agrega un 1 a la lista que es valor del
+            diccionario la cantidad de dias que estuvo en trending es en len()
+            de la lista valor
             '''
             llist = [1]
             if newinfo in dicttionary:
