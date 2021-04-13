@@ -157,4 +157,8 @@ def getVideosCat(catalog, name, country):
 
 
 def mostTrendingVideoCat(catalog, category):
+    '''
+    Funcion que comunica lo deseado con el usuario con
+    la funcion de consulta en el modelo
+    '''
     return model.mostTrendingVideoCat(catalog, category)
