@@ -207,6 +207,46 @@ def getVideosCat(catalog, category, country):
     return newlist
 
 
+def mostTrendingVideoCountry(catalog, country):
+    '''
+    Esta funcion retorna el elemento que estuvo mas dias en
+    trending en una categoria especifica y la cantidad de dias
+    '''
+
+    # Obtenemos la pareja llave valor de la categoria
+    pair = mp.get(catalog['country'], country)
+    if pair is None:
+        newlist = 1
+        days = 0
+    else:
+        # Sacamos la informacion de la pareja y es la lista con los videos
+        country_list = me.getValue(pair)
+        dictionary = {}
+        iterator = ite.newIterator(country_list['videos'])
+        while ite.hasNext(iterator):
+            info = ite.next(iterator)
+            # Seleccionamos los valores que son utiles para la busqueda
+            newinfo = (info['title'], info['channel_title'],
+                       info['country'])
+            '''
+            Iniciamos una lista con 1 que va a ser la primera vez que la info
+            de un video se guardo en el diccionario. Cada vez que se encuentra
+            la misma informacion agrega un 1 a la lista que es valor del
+            diccionario la cantidad de dias que estuvo en trending es en len()
+            de la lista valor
+            '''
+            llist = [1]
+            if newinfo in dictionary:
+                dictionary[newinfo].append(1)
+            else:
+                dictionary[newinfo] = llist
+        # Sacamos la llave del dicionario cuyo valor es el mayor
+        newlist = max(dictionary, key=dictionary.get)
+        days = dictionary[newlist]
+
+    return newlist, days
+
+
 def mostTrendingVideoCat(catalog, category):
     '''
     Esta funcion retorna el elemento que estuvo mas dias en
@@ -222,7 +262,7 @@ def mostTrendingVideoCat(catalog, category):
     else:
         # Sacamos la informacion de la pareja y es la lista con los videos
         category_list = me.getValue(pair)
-        dicttionary = {}
+        dictionary = {}
         iterator = ite.newIterator(category_list['videos'])
         while ite.hasNext(iterator):
             info = ite.next(iterator)
@@ -237,13 +277,13 @@ def mostTrendingVideoCat(catalog, category):
             de la lista valor
             '''
             llist = [1]
-            if newinfo in dicttionary:
-                dicttionary[newinfo].append(1)
+            if newinfo in dictionary:
+                dictionary[newinfo].append(1)
             else:
-                dicttionary[newinfo] = llist
+                dictionary[newinfo] = llist
         # Sacamos la llave del dicionario cuyo valor es el mayor
-        newlist = max(dicttionary, key=dicttionary.get)
-        days = dicttionary[newlist]
+        newlist = max(dictionary, key=dictionary.get)
+        days = dictionary[newlist]
 
     return newlist, days
 

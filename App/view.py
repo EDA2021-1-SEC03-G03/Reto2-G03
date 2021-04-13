@@ -42,7 +42,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Consultar las tendencias por pais y categoria")
-    print("3- Daniel")
+    print("3- Consultar el video mas trending por país")
     print("4- Consultar el video mas trending por categoria")
     print("5- Pendiente")
 
@@ -88,7 +88,16 @@ def reqDaniel():
     return None
 
 
-def printMostTrendingVid(video, days):
+def printMostTrendingVideoByCountry(video, days):
+    print("\nEl video con mas dias en tendencia de la catgoria es: ")
+    print('\n\tTitle: [', video[0],
+          ']\n\tChannel title: [', video[1],
+          ']\n\tCountry: [', video[2],
+          ']\n\tDays: [', len(days),
+          ']')
+
+
+def printMostTrendingVideoByCategory(video, days):
     print("\nEl video con mas dias en tendencia de la catgoria es: ")
     print('\n\tTitle: [', video[0],
           ']\n\tChannel title: [', video[1],
@@ -145,13 +154,15 @@ while True:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
         country = input("Ingrese el pais que desea consultar:\n")
 
+        # Si los parametros son correctos el programa procede con la busqueda
+        result = controller.mostTrendingVideoCountry(catalog, country)
         if result == 1:
             print('\n# ======================================================')
             print('No se encontraron videos en el pais y categoria deseados')
             print('# ======================================================\n')
         else:
             print("Cargando información de los archivos ....")
-            # Print del requerimiento
+            printMostTrendingVideoByCountry(result[0], result[1])
 
     elif int(inputs[0]) == 4:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
@@ -165,7 +176,7 @@ while True:
             print('# ======================================================\n')
         else:
             print("Cargando información de los archivos ....")
-            printMostTrendingVid(result[0], result[1])
+            printMostTrendingVideoByCategory(result[0], result[1])
     else:
         sys.exit(0)
 sys.exit(0)

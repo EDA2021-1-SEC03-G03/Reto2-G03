@@ -128,7 +128,7 @@ def loadVideos(catalog):
     """
     Carga los videos del archivo al catalogo
     """
-    booksfile = cf.data_dir + 'videos-small.csv'
+    booksfile = cf.data_dir + 'videos-large.csv'
     input_file = csv.DictReader(open(booksfile, encoding='utf-8'))
 
     for video in input_file:
@@ -155,6 +155,12 @@ def getVideosCat(catalog, name, country):
     '''
     return model.getVideosCat(catalog, name, country)
 
+def mostTrendingVideoCountry(catalog, country):
+    '''
+    Funcion que comunica lo deseado con el usuario con
+    la funcion de consulta en el modelo
+    '''
+    return model.mostTrendingVideoCountry(catalog, country)
 
 def mostTrendingVideoCat(catalog, category):
     '''
