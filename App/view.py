@@ -45,6 +45,7 @@ def printMenu():
     print("3- Consultar el video mas trending por país")
     print("4- Consultar el video mas trending por categoria")
     print("5- Pendiente")
+    print("6- Salir")
 
 
 # ==============================
