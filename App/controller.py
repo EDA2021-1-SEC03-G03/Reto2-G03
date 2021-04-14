@@ -153,7 +153,28 @@ def getVideosCat(catalog, name, country):
     Funcion que comunica lo deseado con el usuario con
     la funcion de consulta en el modelo
     '''
-    return model.getVideosCat(catalog, name, country)
+
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    categoryVideo = model.getVideosCat(catalog, name, country)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    result = (categoryVideo,
+              delta_time,
+              delta_memory)
+
+    return result
 
 
 def mostTrendingVideoCountry(catalog, country):
@@ -161,7 +182,29 @@ def mostTrendingVideoCountry(catalog, country):
     Funcion que comunica lo deseado con el usuario con
     la funcion de consulta en el modelo
     '''
-    return model.mostTrendingVideoCountry(catalog, country)
+
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    trendingVideo = model.mostTrendingVideoCountry(catalog, country)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    result = (trendingVideo[0],
+              trendingVideo[1],
+              delta_time,
+              delta_memory)
+
+    return result
 
 
 def mostTrendingVideoCat(catalog, category):
@@ -169,7 +212,29 @@ def mostTrendingVideoCat(catalog, category):
     Funcion que comunica lo deseado con el usuario con
     la funcion de consulta en el modelo
     '''
-    return model.mostTrendingVideoCat(catalog, category)
+
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    trendingVideo = model.mostTrendingVideoCat(catalog, category)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    result = (trendingVideo[0],
+              trendingVideo[1],
+              delta_time,
+              delta_memory)
+
+    return result
 
 
 def mostLikedVideosCountryTag(catalog, country, tag):
@@ -177,4 +242,25 @@ def mostLikedVideosCountryTag(catalog, country, tag):
     Funcion que comunica lo deseado con el usuario con
     la funcion de consulta en el modelo
     '''
-    return model.mostLikedVideosCountryTag(catalog, country, tag)
+
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    LikedVideo = model.mostLikedVideosCountryTag(catalog, country, tag)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    result = (LikedVideo,
+              delta_time,
+              delta_memory)
+
+    return result

@@ -161,7 +161,11 @@ while True:
             print('# ======================================================\n')
         else:
             print("Cargando información de los archivos ....")
-            printNVideosCat(result, size)
+            printNVideosCat(result[0], size)
+
+        # Imprime el tiempo y memoria consumida en el proceso
+        print("Tiempo [ms]: ", f"{result[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[2]:.3f}")
 
     elif int(inputs[0]) == 3:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
@@ -177,6 +181,10 @@ while True:
             print("Cargando información de los archivos ....")
             printMostTrendingVideoByCountry(result[0], result[1])
 
+        # Imprime el tiempo y memoria consumida en el proceso
+        print("Tiempo [ms]: ", f"{result[2]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[3]:.3f}")
+
     elif int(inputs[0]) == 4:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
         category = input("Ingrese la categoria que desea consultar:\n").lower()
@@ -190,6 +198,10 @@ while True:
         else:
             print("Cargando información de los archivos ....")
             printMostTrendingVideoByCategory(result[0], result[1])
+
+        # Imprime el tiempo y memoria consumida en el proceso
+        print("Tiempo [ms]: ", f"{result[2]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[3]:.3f}")
 
     elif int(inputs[0]) == 5:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
@@ -213,7 +225,11 @@ while True:
             print('# ======================================================\n')
         else:
             print("Cargando información de los archivos ....")
-            printMostLikedCountryTag(result, size)
+            printMostLikedCountryTag(result[0], size)
+
+        # Imprime el tiempo y memoria consumida en el proceso
+        print("Tiempo [ms]: ", f"{result[1]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{result[2]:.3f}")
 
     else:
         sys.exit(0)
