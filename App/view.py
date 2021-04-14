@@ -84,10 +84,6 @@ def printNVideosCat(catalog, size):
         i += 1
 
 
-def reqDaniel():
-    return None
-
-
 def printMostTrendingVideoByCountry(video, days):
     print("\nEl video con mas dias en tendencia de la catgoria es: ")
     print('\n\tTitle: [', video[0],
@@ -104,6 +100,23 @@ def printMostTrendingVideoByCategory(video, days):
           ']\n\tCategory Id: [', video[2],
           ']\n\tDays: [', len(days),
           ']')
+
+
+def printMostLikedCountryTag(catalog, size):
+    video = catalog['elements']
+    print("\nLos primeros", str(size), "videos ordenados son: ")
+    i = 0
+    while i < size:
+        print('\nVideo:', i + 1)
+        print('\n\tTitle: [', video[i]['title'],
+              ']\n\tChannel title: [', video[i]['channel_title'],
+              ']\n\tPublish time: [', video[i]['publish_time'],
+              ']\n\tViews: [', video[i]['views'],
+              ']\n\tLikes: [', video[i]['likes'],
+              ']\n\tDislikes: [', video[i]['dislikes'],
+              ']\n\tTags: [', video[i]['tags'],
+              ']\n')
+        i += 1
 
 
 # ==============================
@@ -128,7 +141,7 @@ while True:
 
     elif int(inputs[0]) == 2:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
-        country = input("Ingrese el pais que desea consultar:\n")
+        country = input("Ingrese el pais que desea consultar:\n").lower()
         category = input("Ingrese la categoria que desea consultar:\n").lower()
         size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
 
@@ -152,7 +165,7 @@ while True:
 
     elif int(inputs[0]) == 3:
         # Recibe la categoria y la cantidad de videos que el usuario desea ver
-        country = input("Ingrese el pais que desea consultar:\n")
+        country = input("Ingrese el pais que desea consultar:\n").lower()
 
         # Si los parametros son correctos el programa procede con la busqueda
         result = controller.mostTrendingVideoCountry(catalog, country)
@@ -177,6 +190,31 @@ while True:
         else:
             print("Cargando información de los archivos ....")
             printMostTrendingVideoByCategory(result[0], result[1])
+
+    elif int(inputs[0]) == 5:
+        # Recibe la categoria y la cantidad de videos que el usuario desea ver
+        country = input("Ingrese el pais que desea consultar:\n").lower()
+        tag = input("Ingrese el tag que desea consultar:\n")
+        size = int(input("Ingrese la cantidad de videos que desea ver:\n"))
+
+        if size < 1:
+            print("El numero ingresado es mucho menor a lo esperado,",
+                  " trate con uno mayor")
+            break
+
+        elif size > controller.videosSize(catalog['videos']):
+            print("El numero es demasiado grande trate con uno menor")
+            break
+        # Si los parametros son correctos el programa procede con la busqueda
+        result = controller.mostLikedVideosCountryTag(catalog, country, tag)
+        if result == 1:
+            print('\n# ======================================================')
+            print('No se encontraron videos en el pais y categoria deseados')
+            print('# ======================================================\n')
+        else:
+            print("Cargando información de los archivos ....")
+            printMostLikedCountryTag(result, size)
+
     else:
         sys.exit(0)
 sys.exit(0)

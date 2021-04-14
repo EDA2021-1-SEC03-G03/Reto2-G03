@@ -130,7 +130,7 @@ def addCountry(catalog, video):
         pertenecen a esa categoria
     '''
     country = catalog['country']
-    countryName = video['country']
+    countryName = video['country'].lower()
     present = mp.contains(country, countryName)
     if present:
         entry = mp.get(country, countryName)
@@ -200,10 +200,10 @@ def getVideosCat(catalog, category, country):
         iterator = ite.newIterator(category_list['videos'])
         while ite.hasNext(iterator):
             info = ite.next(iterator)
-            if info['country'].lower() == country.lower():
+            if info['country'] == country:
                 lt.addLast(countryList, info)
         # Organizamos la lista de los videos por la cantidad de likes
-        newlist = sortVideos(countryList)
+        newlist = sortVideos(countryList, cmpVideosByViews)
     return newlist
 
 
@@ -288,6 +288,33 @@ def mostTrendingVideoCat(catalog, category):
     return newlist, days
 
 
+def mostLikedVideosCountryTag(catalog, country, tag):
+    '''
+    '''
+    # Obtenemos la pareja llave valor de la categoria
+    pair = mp.get(catalog['country'], country)
+    if pair is None:
+        newList = 1
+    else:
+        # Obtenemos la lista con los videos de ese pais
+        countryList = me.getValue(pair)
+        '''
+        Creamos una lista donde guardaremos los videos que
+        contienen los tags deseados por el usuario
+        '''
+        finalList = lt.newList('ARRAY_LIST')
+        iterator = ite.newIterator(countryList['videos'])
+        while ite.hasNext(iterator):
+            info = ite.next(iterator)
+            # Buscamos los tags que desea el usuario
+            if tag in info['tags']:
+                # Verificamos que no hayan repeticiones de videos
+                lt.addLast(finalList, info)
+            # Le hacemos un sort a la lista dependiendo de los likes
+        newList = sortVideos(finalList, cmpVideosByLikes)
+        return newList
+
+
 def videosSize(catalog):
     """
     Número de libros en el catago
@@ -341,7 +368,7 @@ def cmpVideosByViews(video1, video2):
 # Funciones de ordenamiento
 # ==============================
 
-def sortVideos(value_list):
+def sortVideos(value_list, cmp):
     '''
     Esta funcion organiza los videos por la cantidad
     de likes que tiene el video y retorna la lista
@@ -350,5 +377,5 @@ def sortVideos(value_list):
     if lt.isEmpty(value_list):
         newlist = 1
     else:
-        newlist = qs.sort(value_list, cmpVideosByViews)
+        newlist = qs.sort(value_list, cmp)
     return newlist
