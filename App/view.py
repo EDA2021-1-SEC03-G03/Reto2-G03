@@ -106,8 +106,8 @@ def printMostTrendingVideoByCategory(video, days):
 def printMostLikedCountryTag(catalog, size):
     video = catalog['elements']
     print("\nLos primeros", str(size), "videos ordenados son: ")
-    i = 0
-    while i < size:
+    i = 1
+    while i <= size:
         print('\nVideo:', i + 1)
         print('\n\tTitle: [', video[i]['title'],
               ']\n\tChannel title: [', video[i]['channel_title'],
