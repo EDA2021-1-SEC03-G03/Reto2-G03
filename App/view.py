@@ -44,7 +44,7 @@ def printMenu():
     print("2- Consultar las tendencias por pais y categoria")
     print("3- Consultar el video mas trending por país")
     print("4- Consultar el video mas trending por categoria")
-    print("5- Pendiente")
+    print("5- Consultar por tags y pais los mejores videos por likes")
     print("6- Salir")
 
 
@@ -81,7 +81,7 @@ def printNVideosCat(catalog, size):
               ']\n\tViews: [', video[i]['views'],
               ']\n\tLikes: [', video[i]['likes'],
               ']\n\tDislikes: [', video[i]['dislikes'],
-              ']')
+              ']\n')
         i += 1
 
 
@@ -91,7 +91,7 @@ def printMostTrendingVideoByCountry(video, days):
           ']\n\tChannel title: [', video[1],
           ']\n\tCountry: [', video[2],
           ']\n\tDays: [', len(days),
-          ']')
+          ']\n')
 
 
 def printMostTrendingVideoByCategory(video, days):
@@ -100,7 +100,7 @@ def printMostTrendingVideoByCategory(video, days):
           ']\n\tChannel title: [', video[1],
           ']\n\tCategory Id: [', video[2],
           ']\n\tDays: [', len(days),
-          ']')
+          ']\n')
 
 
 def printMostLikedCountryTag(catalog, size):

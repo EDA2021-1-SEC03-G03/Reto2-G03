@@ -123,11 +123,11 @@ def addVideo(catalog, video):
 def addCountry(catalog, video):
     '''
         Funcion que agrega la informacion de los videos en
-        el catalogo en la llave "category" segun a la categoria
-        a la que pertenecen. La llave mencionada es un mapa por
-        lo que la categoria va a ser la llave y el valor va a
+        el catalogo en la llave "country" segun al pais
+        al que pertenecen. La llave mencionada es un mapa por
+        lo que el nombre del pais va a ser la llave y el valor va a
         ser una lista con todos los videos y su informacion que
-        pertenecen a esa categoria
+        pertenecen a ese pais.
     '''
     country = catalog['country']
     countryName = video['country'].lower()
@@ -156,17 +156,6 @@ def videoCatalog():
     return vidcatalog
 
 
-def daysCatalog():
-    '''
-    Esta funcion crea una lista en donde se almacenaran
-    todos los videos de una categoria y retornara la lista
-    llena
-    '''
-    vidcatalog = {'days': None}
-    vidcatalog['days'] = lt.newList("ARRAY_LIST")
-    return vidcatalog
-
-
 # ==============================
 # Funciones de consulta
 # ==============================
@@ -184,8 +173,8 @@ def convertIdtoCat(catalog, categoryId):
 def getVideosCat(catalog, category, country):
     '''
     Esta funcion retorna una lista con todos los videos
-    y su informacion que hay en una categoria pasada por
-    parametro, esta es proporcionada por el usuario
+    y su informacion que hay en una categoria y pais pasados
+    por parametro, esta es proporcionada por el usuario
     '''
     # Tiene un espacio porque los nombres de las categorias se guardaron asi
     parameter = ' ' + category
@@ -290,6 +279,9 @@ def mostTrendingVideoCat(catalog, category):
 
 def mostLikedVideosCountryTag(catalog, country, tag):
     '''
+    funcion que retorna una lista con los videos de 
+    un pais pasado por parametro y que contenga el tag
+    deseado por el usuario
     '''
     # Obtenemos la pareja llave valor de la categoria
     pair = mp.get(catalog['country'], country)
